@@ -1,184 +1,127 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight, Briefcase, Users, Building2, Search, Shield, Zap } from 'lucide-react';
-import PageLayout from '@/components/layout/PageLayout';
-import GlassCard from '@/components/ui/GlassCard';
+import { Link as RouterLink } from 'react-router-dom';
+import { Box, Container, Typography, Button, Grid, Stack } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import WorkIcon from '@mui/icons-material/Work';
+import GroupsIcon from '@mui/icons-material/Groups';
+import BusinessIcon from '@mui/icons-material/Business';
+import SearchIcon from '@mui/icons-material/Search';
+import SecurityIcon from '@mui/icons-material/Security';
+import BoltIcon from '@mui/icons-material/Bolt';
+import MuiPageLayout from '@/components/layout/MuiPageLayout';
+import GlassCardMui from '@/components/mui/GlassCardMui';
+import { glassStyles } from '@/theme/muiTheme';
+
+const features = [
+  { icon: SearchIcon, title: 'Smart Job Matching', description: 'AI-powered system matches you with perfect opportunities based on your skills.' },
+  { icon: SecurityIcon, title: 'Secure & Private', description: 'Your data is protected with enterprise-grade security.' },
+  { icon: BoltIcon, title: 'Instant Applications', description: 'Apply to multiple jobs with one click. Track all applications in one place.' },
+];
+
+const roles = [
+  { icon: GroupsIcon, title: 'Job Seekers', description: 'Find your dream job with powerful search.', link: '/signup?role=job_seeker' },
+  { icon: BusinessIcon, title: 'Employers', description: 'Post jobs and find top talent.', link: '/signup?role=employer' },
+  { icon: WorkIcon, title: 'Recruiters', description: 'Connect candidates with opportunities.', link: '/signup?role=recruiter' },
+];
+
+const stats = [
+  { value: '10K+', label: 'Active Jobs' },
+  { value: '50K+', label: 'Job Seekers' },
+  { value: '5K+', label: 'Companies' },
+  { value: '95%', label: 'Success Rate' },
+];
 
 const Landing = () => {
-  const features = [
-    {
-      icon: Search,
-      title: 'Smart Job Matching',
-      description: 'Our AI-powered system matches you with the perfect opportunities based on your skills and preferences.',
-    },
-    {
-      icon: Shield,
-      title: 'Secure & Private',
-      description: 'Your data is protected with enterprise-grade security. Control who sees your profile.',
-    },
-    {
-      icon: Zap,
-      title: 'Instant Applications',
-      description: 'Apply to multiple jobs with one click. Track all your applications in one place.',
-    },
-  ];
-
-  const roles = [
-    {
-      icon: Users,
-      title: 'Job Seekers',
-      description: 'Find your dream job with powerful search and personalized recommendations.',
-      link: '/signup?role=job_seeker',
-    },
-    {
-      icon: Building2,
-      title: 'Employers',
-      description: 'Post jobs and find top talent. Manage applications effortlessly.',
-      link: '/signup?role=employer',
-    },
-    {
-      icon: Briefcase,
-      title: 'Recruiters',
-      description: 'Connect candidates with opportunities. Streamline your recruitment workflow.',
-      link: '/signup?role=recruiter',
-    },
-  ];
-
   return (
-    <PageLayout>
-      <div className="container max-w-6xl mx-auto px-4">
-        {/* Hero Section */}
-        <section className="text-center py-16 lg:py-24">
-          <div className="animate-slide-up">
-            <span className="inline-block px-4 py-2 rounded-full text-sm font-medium bg-primary/20 text-primary mb-6">
-              The Future of Recruitment
-            </span>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold mb-6 leading-tight">
-              Find Your Perfect
-              <span className="gradient-text block">Career Match</span>
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-              Connect with top companies and talent through our premium recruitment platform. 
-              Beautiful, fast, and designed for the modern workforce.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/signup" className="gradient-button text-lg px-8 py-4 inline-flex items-center gap-2">
-                Get Started Free
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link to="/login" className="glass-button text-lg px-8 py-4">
-                Sign In
-              </Link>
-            </div>
-          </div>
+    <MuiPageLayout>
+      <Container maxWidth="lg">
+        {/* Hero */}
+        <Box sx={{ textAlign: 'center', py: { xs: 8, md: 12 } }}>
+          <Typography variant="overline" sx={{ px: 2, py: 1, borderRadius: 4, bgcolor: 'rgba(14, 165, 233, 0.2)', color: 'primary.main', mb: 3, display: 'inline-block' }}>
+            The Future of Recruitment
+          </Typography>
+          <Typography variant="h2" sx={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, mb: 3 }}>
+            Find Your Perfect<Box component="span" sx={{ ...glassStyles.gradientText, display: 'block' }}>Career Match</Box>
+          </Typography>
+          <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto', mb: 5 }}>
+            Connect with top companies through our premium recruitment platform.
+          </Typography>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
+            <Button component={RouterLink} to="/signup" variant="contained" size="large" endIcon={<ArrowForwardIcon />}>
+              Get Started Free
+            </Button>
+            <Button component={RouterLink} to="/login" variant="outlined" size="large">Sign In</Button>
+          </Stack>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 animate-slide-up animation-delay-200">
-            {[
-              { value: '10K+', label: 'Active Jobs' },
-              { value: '50K+', label: 'Job Seekers' },
-              { value: '5K+', label: 'Companies' },
-              { value: '95%', label: 'Success Rate' },
-            ].map(stat => (
-              <GlassCard key={stat.label} className="p-6">
-                <div className="text-3xl md:text-4xl font-display font-bold gradient-text">{stat.value}</div>
-                <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
-              </GlassCard>
+          <Grid container spacing={2} sx={{ mt: 8 }}>
+            {stats.map(stat => (
+              <Grid item xs={6} md={3} key={stat.label}>
+                <GlassCardMui>
+                  <Typography variant="h4" sx={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, ...glassStyles.gradientText }}>{stat.value}</Typography>
+                  <Typography variant="body2" color="text.secondary">{stat.label}</Typography>
+                </GlassCardMui>
+              </Grid>
             ))}
-          </div>
-        </section>
+          </Grid>
+        </Box>
 
-        {/* Features Section */}
-        <section className="py-16">
-          <div className="text-center mb-12 animate-slide-up">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-              Why Choose HireGlass?
-            </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              We've built the most intuitive recruitment platform with features that make hiring effortless.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <GlassCard 
-                key={feature.title} 
-                hover 
-                className={`p-8 animate-slide-up animation-delay-${(index + 1) * 200}`}
-              >
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center mb-6">
-                  <feature.icon className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="text-xl font-display font-semibold mb-3">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
-              </GlassCard>
+        {/* Features */}
+        <Box sx={{ py: 8 }}>
+          <Typography variant="h4" sx={{ textAlign: 'center', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, mb: 6 }}>
+            Why Choose HireGlass?
+          </Typography>
+          <Grid container spacing={3}>
+            {features.map(f => (
+              <Grid item xs={12} md={4} key={f.title}>
+                <GlassCardMui hover>
+                  <Box sx={{ width: 56, height: 56, borderRadius: 3, background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(236, 72, 153, 0.3))', display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+                    <f.icon sx={{ fontSize: 28, color: 'primary.main' }} />
+                  </Box>
+                  <Typography variant="h6" sx={{ fontFamily: "'Space Grotesk', sans-serif", mb: 1 }}>{f.title}</Typography>
+                  <Typography color="text.secondary">{f.description}</Typography>
+                </GlassCardMui>
+              </Grid>
             ))}
-          </div>
-        </section>
+          </Grid>
+        </Box>
 
-        {/* Roles Section */}
-        <section className="py-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-              Built for Everyone
-            </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              Whether you're looking for a job or looking to hire, we've got you covered.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {roles.map((role, index) => (
-              <Link key={role.title} to={role.link}>
-                <GlassCard hover className="p-8 h-full">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-secondary/50 to-primary/30 flex items-center justify-center mb-6">
-                    <role.icon className="w-7 h-7 text-secondary-foreground" />
-                  </div>
-                  <h3 className="text-xl font-display font-semibold mb-3">{role.title}</h3>
-                  <p className="text-muted-foreground mb-4">{role.description}</p>
-                  <span className="text-primary font-medium inline-flex items-center gap-2">
-                    Get Started <ArrowRight className="w-4 h-4" />
-                  </span>
-                </GlassCard>
-              </Link>
+        {/* Roles */}
+        <Box sx={{ py: 8 }}>
+          <Typography variant="h4" sx={{ textAlign: 'center', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, mb: 6 }}>
+            Built for Everyone
+          </Typography>
+          <Grid container spacing={3}>
+            {roles.map(r => (
+              <Grid item xs={12} md={4} key={r.title}>
+                <Box component={RouterLink} to={r.link} sx={{ textDecoration: 'none' }}>
+                  <GlassCardMui hover sx={{ height: '100%' }}>
+                    <Box sx={{ width: 56, height: 56, borderRadius: 3, background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(14, 165, 233, 0.3))', display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+                      <r.icon sx={{ fontSize: 28 }} />
+                    </Box>
+                    <Typography variant="h6" sx={{ fontFamily: "'Space Grotesk', sans-serif", mb: 1, color: 'text.primary' }}>{r.title}</Typography>
+                    <Typography color="text.secondary" sx={{ mb: 2 }}>{r.description}</Typography>
+                    <Typography color="primary.main" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      Get Started <ArrowForwardIcon fontSize="small" />
+                    </Typography>
+                  </GlassCardMui>
+                </Box>
+              </Grid>
             ))}
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-16">
-          <GlassCard className="p-12 text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-accent/10" />
-            <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-                Ready to Transform Your Career?
-              </h2>
-              <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-                Join thousands of professionals who have found their dream jobs through HireGlass.
-              </p>
-              <Link to="/signup" className="gradient-button text-lg px-8 py-4 inline-flex items-center gap-2">
-                Start Your Journey
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
-          </GlassCard>
-        </section>
+          </Grid>
+        </Box>
 
         {/* Footer */}
-        <footer className="py-8 border-t border-white/10">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <Briefcase className="w-4 h-4 text-primary-foreground" />
-              </div>
-              <span className="font-display font-bold gradient-text">HireGlass</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              © 2024 HireGlass. All rights reserved.
-            </p>
-          </div>
-        </footer>
-      </div>
-    </PageLayout>
+        <Box sx={{ py: 4, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Box sx={{ width: 32, height: 32, borderRadius: 1, background: 'linear-gradient(135deg, hsl(199, 89%, 48%), hsl(330, 80%, 60%))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <WorkIcon sx={{ fontSize: 16, color: 'hsl(230, 35%, 7%)' }} />
+            </Box>
+            <Typography sx={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, ...glassStyles.gradientText }}>HireGlass</Typography>
+          </Box>
+          <Typography variant="body2" color="text.secondary">© 2024 HireGlass. All rights reserved.</Typography>
+        </Box>
+      </Container>
+    </MuiPageLayout>
   );
 };
 
