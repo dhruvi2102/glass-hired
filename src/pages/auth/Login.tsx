@@ -1,134 +1,85 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { Mail, Lock, Eye, EyeOff, Briefcase } from 'lucide-react';
-import PageLayout from '@/components/layout/PageLayout';
-import GlassCard from '@/components/ui/GlassCard';
-import { toast } from '@/hooks/use-toast';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {
+  Box, Container, Typography, TextField, Button, InputAdornment, IconButton, Checkbox, FormControlLabel,
+} from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import WorkIcon from '@mui/icons-material/Work';
+import { useSnackbar } from 'notistack';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { loginAsync } from '@/store/slices/authSlice';
+import MuiPageLayout from '@/components/layout/MuiPageLayout';
+import GlassCardMui from '@/components/mui/GlassCardMui';
+import { glassStyles } from '@/theme/muiTheme';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.auth);
+  const { enqueueSnackbar } = useSnackbar();
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
     try {
-      const success = await login(email, password);
-      if (success) {
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully logged in.",
-        });
-        // Navigate based on email pattern (mock role detection)
-        if (email.includes('employer') || email.includes('recruiter') || email.includes('agency')) {
-          navigate('/employer/dashboard');
-        } else {
-          navigate('/seeker/dashboard');
-        }
+      const result = await dispatch(loginAsync({ email, password })).unwrap();
+      enqueueSnackbar('Welcome back!', { variant: 'success' });
+      if (result.role === 'job_seeker') {
+        navigate('/seeker/dashboard');
+      } else {
+        navigate('/employer/dashboard');
       }
     } catch (error) {
-      toast({
-        title: "Login Failed",
-        description: "Invalid email or password.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+      enqueueSnackbar('Invalid email or password.', { variant: 'error' });
     }
   };
 
   return (
-    <PageLayout>
-      <div className="container max-w-md mx-auto px-4">
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <Briefcase className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <span className="text-2xl font-display font-bold gradient-text">HireGlass</span>
-          </Link>
-          <h1 className="text-3xl font-display font-bold mb-2">Welcome Back</h1>
-          <p className="text-muted-foreground">Sign in to continue to your account</p>
-        </div>
+    <MuiPageLayout>
+      <Container maxWidth="sm">
+        <Box sx={{ textAlign: 'center', mb: 4 }}>
+          <Box component={RouterLink} to="/" sx={{ display: 'inline-flex', alignItems: 'center', gap: 1.5, mb: 4, textDecoration: 'none' }}>
+            <Box sx={{ width: 48, height: 48, borderRadius: 2, background: 'linear-gradient(135deg, hsl(199, 89%, 48%) 0%, hsl(330, 80%, 60%) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <WorkIcon sx={{ color: 'hsl(230, 35%, 7%)' }} />
+            </Box>
+            <Typography variant="h5" sx={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, ...glassStyles.gradientText }}>HireGlass</Typography>
+          </Box>
+          <Typography variant="h4" sx={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, mb: 1 }}>Welcome Back</Typography>
+          <Typography color="text.secondary">Sign in to continue to your account</Typography>
+        </Box>
 
-        <GlassCard className="p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium mb-2">Email Address</label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  required
-                  className="glass-input pl-12"
-                />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                Tip: Use "employer@" to login as employer, or any email for job seeker
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  className="glass-input pl-12 pr-12"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="w-4 h-4 rounded border-white/20 bg-white/5" />
-                <span className="text-sm text-muted-foreground">Remember me</span>
-              </label>
-              <Link to="/forgot-password" className="text-sm text-primary hover:underline">
-                Forgot password?
-              </Link>
-            </div>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full gradient-button py-4 disabled:opacity-50"
-            >
+        <GlassCardMui>
+          <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <TextField fullWidth label="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+              InputProps={{ startAdornment: <InputAdornment position="start"><EmailIcon /></InputAdornment> }}
+              helperText="Tip: Use 'employer@' to login as employer"
+            />
+            <TextField fullWidth label="Password" type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} required
+              InputProps={{
+                startAdornment: <InputAdornment position="start"><LockIcon /></InputAdornment>,
+                endAdornment: <InputAdornment position="end"><IconButton onClick={() => setShowPassword(!showPassword)}>{showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}</IconButton></InputAdornment>,
+              }}
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <FormControlLabel control={<Checkbox />} label="Remember me" />
+              <Button component={RouterLink} to="/forgot-password" sx={{ textTransform: 'none' }}>Forgot password?</Button>
+            </Box>
+            <Button type="submit" variant="contained" size="large" disabled={isLoading} fullWidth>
               {isLoading ? 'Signing in...' : 'Sign In'}
-            </button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-muted-foreground">
-              Don't have an account?{' '}
-              <Link to="/signup" className="text-primary hover:underline font-medium">
-                Sign up
-              </Link>
-            </p>
-          </div>
-        </GlassCard>
-      </div>
-    </PageLayout>
+            </Button>
+          </Box>
+          <Typography sx={{ mt: 3, textAlign: 'center' }} color="text.secondary">
+            Don't have an account? <Button component={RouterLink} to="/signup" sx={{ textTransform: 'none' }}>Sign up</Button>
+          </Typography>
+        </GlassCardMui>
+      </Container>
+    </MuiPageLayout>
   );
 };
 
