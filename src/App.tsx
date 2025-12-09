@@ -1,30 +1,31 @@
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { SnackbarProvider } from 'notistack';
-import { Provider } from 'react-redux';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { store } from '@/store/store';
-import { useAppSelector } from '@/store/hooks';
-import { glassTheme } from '@/theme/muiTheme';
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { JobsProvider } from "@/contexts/JobsContext";
 
-// Pages - Keeping existing pages but they'll need MUI migration
-import Index from './pages/Index';
-import NotFound from './pages/NotFound';
-import Login from './pages/auth/Login';
-import Signup from './pages/auth/Signup';
-import ForgotPassword from './pages/auth/ForgotPassword';
-import SeekerDashboard from './pages/seeker/SeekerDashboard';
-import BrowseJobs from './pages/seeker/BrowseJobs';
-import JobDetails from './pages/seeker/JobDetails';
-import MyApplications from './pages/seeker/MyApplications';
-import SavedJobs from './pages/seeker/SavedJobs';
-import EmployerDashboard from './pages/employer/EmployerDashboard';
-import PostJob from './pages/employer/PostJob';
-import MyJobs from './pages/employer/MyJobs';
+// Pages
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import SeekerDashboard from "./pages/seeker/SeekerDashboard";
+import BrowseJobs from "./pages/seeker/BrowseJobs";
+import JobDetails from "./pages/seeker/JobDetails";
+import MyApplications from "./pages/seeker/MyApplications";
+import SavedJobs from "./pages/seeker/SavedJobs";
+import EmployerDashboard from "./pages/employer/EmployerDashboard";
+import PostJob from "./pages/employer/PostJob";
+import MyJobs from "./pages/employer/MyJobs";
+
+const queryClient = new QueryClient();
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode; allowedRoles?: string[] }) => {
-  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, user } = useAuth();
   
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -97,19 +98,19 @@ const AppRoutes = () => {
 };
 
 const App = () => (
-  <Provider store={store}>
-    <ThemeProvider theme={glassTheme}>
-      <CssBaseline />
-      <SnackbarProvider 
-        maxSnack={3}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </SnackbarProvider>
-    </ThemeProvider>
-  </Provider>
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <JobsProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </TooltipProvider>
+      </JobsProvider>
+    </AuthProvider>
+  </QueryClientProvider>
 );
 
 export default App;
