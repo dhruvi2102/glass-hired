@@ -3,6 +3,10 @@ import { ArrowRight, Briefcase, Users, Building2, Search, Shield, Zap } from 'lu
 import PageLayout from '@/components/layout/PageLayout';
 import GlassCard from '@/components/ui/GlassCard';
 import { Button } from '@/components/ui/button';
+import TestimonialsCarousel from '@/components/landing/TestimonialsCarousel';
+import CompaniesCarousel from '@/components/landing/CompaniesCarousel';
+import FAQSection from '@/components/landing/FAQSection';
+import Chatbot from '@/components/landing/Chatbot';
 
 const features = [
   { icon: Search, title: 'Smart Job Matching', description: 'AI-powered system matches you with perfect opportunities based on your skills.' },
@@ -67,6 +71,9 @@ const Landing = () => {
           </div>
         </section>
 
+        {/* Companies Carousel */}
+        <CompaniesCarousel />
+
         {/* Features Section */}
         <section className="py-16">
           <h2 className="text-3xl md:text-4xl font-display font-bold text-center mb-12">
@@ -84,6 +91,9 @@ const Landing = () => {
             ))}
           </div>
         </section>
+
+        {/* Testimonials Carousel */}
+        <TestimonialsCarousel />
 
         {/* Roles Section */}
         <section className="py-16">
@@ -108,6 +118,9 @@ const Landing = () => {
           </div>
         </section>
 
+        {/* FAQ Section */}
+        <FAQSection />
+
         {/* Footer */}
         <footer className="py-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-3">
@@ -119,6 +132,9 @@ const Landing = () => {
           <p className="text-sm text-muted-foreground">© 2024 HireGlass. All rights reserved.</p>
         </footer>
       </div>
+
+      {/* Chatbot */}
+      <Chatbot />
     </PageLayout>
   );
 };
