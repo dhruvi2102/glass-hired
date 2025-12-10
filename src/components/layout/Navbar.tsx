@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { Menu, X, User, LogOut, Briefcase, Building2, Users, Search } from 'lucide-react';
+import { Menu, X, User, LogOut, Briefcase, Building2, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -81,9 +82,10 @@ const Navbar = () => {
 
           {/* Auth Buttons / User Menu */}
           <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle />
             {isAuthenticated ? (
               <>
-                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-muted/50 border border-border">
                   {getRoleIcon()}
                   <span className="text-sm font-medium">{user?.name}</span>
                 </div>
@@ -140,7 +142,11 @@ const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
-              <div className="h-px bg-white/10 my-2" />
+              <div className="flex items-center justify-between px-4 py-2">
+                <span className="text-sm text-muted-foreground">Theme</span>
+                <ThemeToggle />
+              </div>
+              <div className="h-px bg-border my-2" />
               {isAuthenticated ? (
                 <button
                   onClick={() => { handleLogout(); setMobileMenuOpen(false); }}

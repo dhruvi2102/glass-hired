@@ -6,7 +6,73 @@
 
 @layer base {
   :root {
-    /* Glassmorphism Background - Deep cosmic gradient */
+    /* Light Theme - Clean & Professional */
+    --background: 220 20% 97%;
+    --foreground: 230 25% 15%;
+
+    /* Glass Cards */
+    --card: 0 0% 100%;
+    --card-foreground: 230 25% 15%;
+
+    /* Popover/Dropdown */
+    --popover: 0 0% 100%;
+    --popover-foreground: 230 25% 15%;
+
+    /* Primary - Vibrant Cyan/Blue */
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Soft Purple */
+    --secondary: 270 50% 55%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted */
+    --muted: 220 15% 90%;
+    --muted-foreground: 220 10% 45%;
+
+    /* Accent - Pink/Magenta */
+    --accent: 330 80% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Success */
+    --success: 142 70% 45%;
+    --success-foreground: 0 0% 100%;
+
+    /* Destructive */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders & Inputs */
+    --border: 220 15% 85%;
+    --input: 220 15% 90%;
+    --ring: 199 89% 48%;
+
+    --radius: 1rem;
+
+    /* Glass Effect Variables - Light */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --glass-blur: blur(20px);
+
+    /* Gradient Orbs - Light */
+    --orb-primary: hsl(199 89% 70% / 0.3);
+    --orb-secondary: hsl(270 50% 70% / 0.3);
+    --orb-accent: hsl(330 80% 75% / 0.25);
+
+    /* Sidebar */
+    --sidebar-background: 220 20% 95%;
+    --sidebar-foreground: 230 25% 15%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 15% 90%;
+    --sidebar-accent-foreground: 230 25% 15%;
+    --sidebar-border: 220 15% 85%;
+    --sidebar-ring: 199 89% 48%;
+  }
+
+  .dark {
+    /* Dark Theme - Cosmic Glassmorphism */
     --background: 230 35% 7%;
     --foreground: 210 40% 98%;
 
@@ -47,15 +113,13 @@
     --input: 230 20% 25%;
     --ring: 199 89% 48%;
 
-    --radius: 1rem;
-
-    /* Glass Effect Variables */
+    /* Glass Effect Variables - Dark */
     --glass-bg: rgba(255, 255, 255, 0.08);
     --glass-border: rgba(255, 255, 255, 0.15);
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     --glass-blur: blur(20px);
 
-    /* Gradient Orbs */
+    /* Gradient Orbs - Dark */
     --orb-primary: hsl(199 89% 48% / 0.4);
     --orb-secondary: hsl(270 50% 50% / 0.4);
     --orb-accent: hsl(330 80% 60% / 0.3);
@@ -155,6 +219,14 @@
 
   /* Background Gradient */
   .bg-gradient-cosmic {
+    background: linear-gradient(135deg, 
+      hsl(220 20% 97%) 0%, 
+      hsl(230 25% 94%) 50%, 
+      hsl(220 20% 96%) 100%
+    );
+  }
+
+  .dark .bg-gradient-cosmic {
     background: linear-gradient(135deg, 
       hsl(230 35% 7%) 0%, 
       hsl(250 40% 12%) 50%, 
