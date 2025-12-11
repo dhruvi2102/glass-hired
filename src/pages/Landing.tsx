@@ -1,30 +1,67 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight, Briefcase, Users, Building2, Search, Shield, Zap } from 'lucide-react';
-import PageLayout from '@/components/layout/PageLayout';
-import GlassCard from '@/components/ui/GlassCard';
-import { Button } from '@/components/ui/button';
-import TestimonialsCarousel from '@/components/landing/TestimonialsCarousel';
-import CompaniesCarousel from '@/components/landing/CompaniesCarousel';
-import FAQSection from '@/components/landing/FAQSection';
-import Chatbot from '@/components/landing/Chatbot';
+import { Link } from "react-router-dom";
+import {
+  ArrowRight,
+  Briefcase,
+  Users,
+  Building2,
+  Search,
+  Shield,
+  Zap,
+} from "lucide-react";
+import PageLayout from "@/components/layout/PageLayout";
+import GlassCard from "@/components/ui/GlassCard";
+import { CustomButton } from "@/components/custom/buttons/Button";
+import TestimonialsCarousel from "@/components/landing/TestimonialsCarousel";
+import CompaniesCarousel from "@/components/landing/CompaniesCarousel";
+import FAQSection from "@/components/landing/FAQSection";
+import Chatbot from "@/components/landing/Chatbot";
 
 const features = [
-  { icon: Search, title: 'Smart Job Matching', description: 'AI-powered system matches you with perfect opportunities based on your skills.' },
-  { icon: Shield, title: 'Secure & Private', description: 'Your data is protected with enterprise-grade security.' },
-  { icon: Zap, title: 'Instant Applications', description: 'Apply to multiple jobs with one click. Track all applications in one place.' },
+  {
+    icon: Search,
+    title: "Smart Job Matching",
+    description:
+      "AI-powered system matches you with perfect opportunities based on your skills.",
+  },
+  {
+    icon: Shield,
+    title: "Secure & Private",
+    description: "Your data is protected with enterprise-grade security.",
+  },
+  {
+    icon: Zap,
+    title: "Instant Applications",
+    description:
+      "Apply to multiple jobs with one click. Track all applications in one place.",
+  },
 ];
 
 const roles = [
-  { icon: Users, title: 'Job Seekers', description: 'Find your dream job with powerful search.', link: '/signup?role=job_seeker' },
-  { icon: Building2, title: 'Employers', description: 'Post jobs and find top talent.', link: '/signup?role=employer' },
-  { icon: Briefcase, title: 'Recruiters', description: 'Connect candidates with opportunities.', link: '/signup?role=recruiter' },
+  {
+    icon: Users,
+    title: "Job Seekers",
+    description: "Find your dream job with powerful search.",
+    link: "/signup?role=job_seeker",
+  },
+  {
+    icon: Building2,
+    title: "Employers",
+    description: "Post jobs and find top talent.",
+    link: "/signup?role=employer",
+  },
+  {
+    icon: Briefcase,
+    title: "Recruiters",
+    description: "Connect candidates with opportunities.",
+    link: "/signup?role=recruiter",
+  },
 ];
 
 const stats = [
-  { value: '10K+', label: 'Active Jobs' },
-  { value: '50K+', label: 'Job Seekers' },
-  { value: '5K+', label: 'Companies' },
-  { value: '95%', label: 'Success Rate' },
+  { value: "10K+", label: "Active Jobs" },
+  { value: "50K+", label: "Job Seekers" },
+  { value: "5K+", label: "Companies" },
+  { value: "95%", label: "Success Rate" },
 ];
 
 const Landing = () => {
@@ -41,31 +78,37 @@ const Landing = () => {
             <span className="gradient-text block">Career Match</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-            Connect with top companies through our premium recruitment platform. 
-            Whether you're seeking opportunities or top talent, we've got you covered.
+            Connect with top companies through our premium recruitment platform.
+            Whether you're seeking opportunities or top talent, we've got you
+            covered.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/signup">
-              <Button className="gradient-button text-lg px-8 py-6 w-full sm:w-auto">
+              <CustomButton className="gradient-button text-lg px-8 py-6 w-full sm:w-auto">
                 Get Started Free
                 <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
+              </CustomButton>
             </Link>
             <Link to="/login">
-              <Button variant="outline" className="glass-button text-lg px-8 py-6 w-full sm:w-auto">
+              <CustomButton
+                variant="outline"
+                className="glass-button text-lg px-8 py-6 w-full sm:w-auto"
+              >
                 Sign In
-              </Button>
+              </CustomButton>
             </Link>
           </div>
 
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
-            {stats.map(stat => (
+            {stats.map((stat) => (
               <GlassCard key={stat.label} className="p-6 text-center">
                 <div className="text-3xl md:text-4xl font-display font-bold gradient-text mb-2">
                   {stat.value}
                 </div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-sm text-muted-foreground">
+                  {stat.label}
+                </div>
               </GlassCard>
             ))}
           </div>
@@ -80,12 +123,14 @@ const Landing = () => {
             Why Choose HireGlass?
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {features.map(feature => (
+            {features.map((feature) => (
               <GlassCard key={feature.title} hover className="p-8">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center mb-6">
                   <feature.icon className="w-7 h-7 text-primary" />
                 </div>
-                <h3 className="text-xl font-display font-semibold mb-3">{feature.title}</h3>
+                <h3 className="text-xl font-display font-semibold mb-3">
+                  {feature.title}
+                </h3>
                 <p className="text-muted-foreground">{feature.description}</p>
               </GlassCard>
             ))}
@@ -101,14 +146,18 @@ const Landing = () => {
             Built for Everyone
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {roles.map(role => (
+            {roles.map((role) => (
               <Link key={role.title} to={role.link}>
                 <GlassCard hover className="p-8 h-full">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-secondary/50 to-primary/30 flex items-center justify-center mb-6">
                     <role.icon className="w-7 h-7" />
                   </div>
-                  <h3 className="text-xl font-display font-semibold mb-3">{role.title}</h3>
-                  <p className="text-muted-foreground mb-4">{role.description}</p>
+                  <h3 className="text-xl font-display font-semibold mb-3">
+                    {role.title}
+                  </h3>
+                  <p className="text-muted-foreground mb-4">
+                    {role.description}
+                  </p>
                   <span className="text-primary font-medium flex items-center gap-2">
                     Get Started <ArrowRight className="w-4 h-4" />
                   </span>
@@ -127,9 +176,13 @@ const Landing = () => {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
               <Briefcase className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="font-display font-bold gradient-text">HireGlass</span>
+            <span className="font-display font-bold gradient-text">
+              HireGlass
+            </span>
           </div>
-          <p className="text-sm text-muted-foreground">© 2024 HireGlass. All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">
+            © 2024 HireGlass. All rights reserved.
+          </p>
         </footer>
       </div>
 

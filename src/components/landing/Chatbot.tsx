@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { MessageCircle, X, Send } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import GlassCard from '@/components/ui/GlassCard';
+import { useState } from "react";
+import { MessageCircle, X, Send } from "lucide-react";
+import { CustomButton } from "@/components/custom/buttons/Button";
+import { Input } from "@/components/ui/input";
+import GlassCard from "@/components/ui/GlassCard";
 
 interface Message {
   id: number;
@@ -11,13 +11,16 @@ interface Message {
 }
 
 const botResponses: Record<string, string> = {
-  'hello': 'Hello! How can I help you today?',
-  'hi': 'Hi there! Looking for a job or want to post one?',
-  'job': 'We have thousands of jobs available! Check out our Browse Jobs section to find your perfect match.',
-  'apply': 'To apply for a job, simply click on any job listing and hit the Apply button. Easy!',
-  'employer': 'Are you an employer? Sign up as an Employer to post jobs and find top talent.',
-  'help': 'I can help you with: Finding jobs, Applying to positions, Posting jobs (for employers), Account questions.',
-  'default': 'Thanks for your message! For detailed assistance, please contact our support team or explore our FAQ section below.'
+  hello: "Hello! How can I help you today?",
+  hi: "Hi there! Looking for a job or want to post one?",
+  job: "We have thousands of jobs available! Check out our Browse Jobs section to find your perfect match.",
+  apply:
+    "To apply for a job, simply click on any job listing and hit the Apply button. Easy!",
+  employer:
+    "Are you an employer? Sign up as an Employer to post jobs and find top talent.",
+  help: "I can help you with: Finding jobs, Applying to positions, Posting jobs (for employers), Account questions.",
+  default:
+    "Thanks for your message! For detailed assistance, please contact our support team or explore our FAQ section below.",
 };
 
 const getResponse = (input: string): string => {
@@ -27,28 +30,36 @@ const getResponse = (input: string): string => {
       return botResponses[key];
     }
   }
-  return botResponses['default'];
+  return botResponses["default"];
 };
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { id: 1, text: 'Hi! I\'m HireBot. How can I assist you today?', isBot: true }
+    {
+      id: 1,
+      text: "Hi! I'm HireBot. How can I assist you today?",
+      isBot: true,
+    },
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
 
   const handleSend = () => {
     if (!input.trim()) return;
-    
+
     const userMessage: Message = { id: Date.now(), text: input, isBot: false };
-    setMessages(prev => [...prev, userMessage]);
-    
+    setMessages((prev) => [...prev, userMessage]);
+
     setTimeout(() => {
-      const botMessage: Message = { id: Date.now() + 1, text: getResponse(input), isBot: true };
-      setMessages(prev => [...prev, botMessage]);
+      const botMessage: Message = {
+        id: Date.now() + 1,
+        text: getResponse(input),
+        isBot: true,
+      };
+      setMessages((prev) => [...prev, botMessage]);
     }, 500);
-    
-    setInput('');
+
+    setInput("");
   };
 
   return (
@@ -56,7 +67,9 @@ const Chatbot = () => {
       {/* Chat Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg flex items-center justify-center hover:scale-110 transition-transform ${isOpen ? 'hidden' : ''}`}
+        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg flex items-center justify-center hover:scale-110 transition-transform ${
+          isOpen ? "hidden" : ""
+        }`}
       >
         <MessageCircle className="w-6 h-6" />
       </button>
@@ -76,20 +89,31 @@ const Chatbot = () => {
                   <p className="text-xs text-muted-foreground">Online</p>
                 </div>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
+              <CustomButton
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsOpen(false)}
+              >
                 <X className="w-5 h-5" />
-              </Button>
+              </CustomButton>
             </div>
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
-              {messages.map(msg => (
-                <div key={msg.id} className={`flex ${msg.isBot ? 'justify-start' : 'justify-end'}`}>
-                  <div className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm ${
-                    msg.isBot 
-                      ? 'bg-muted text-foreground rounded-bl-sm' 
-                      : 'bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-br-sm'
-                  }`}>
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex ${
+                    msg.isBot ? "justify-start" : "justify-end"
+                  }`}
+                >
+                  <div
+                    className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm ${
+                      msg.isBot
+                        ? "bg-muted text-foreground rounded-bl-sm"
+                        : "bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-br-sm"
+                    }`}
+                  >
                     {msg.text}
                   </div>
                 </div>
@@ -102,13 +126,18 @@ const Chatbot = () => {
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
                   placeholder="Type a message..."
                   className="flex-1 bg-background/50"
                 />
-                <Button onClick={handleSend} size="icon" className="shrink-0">
+                <CustomButton
+                  onClick={handleSend}
+                  size="icon"
+                  variant="ghost"
+                  className="shrink-0"
+                >
                   <Send className="w-4 h-4" />
-                </Button>
+                </CustomButton>
               </div>
             </div>
           </GlassCard>

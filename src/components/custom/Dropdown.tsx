@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import { ChevronDown, Check } from 'lucide-react';
+import React, { useState, useRef, useEffect } from "react";
+import { cn } from "@/lib/utils";
+import { ChevronDown, Check } from "lucide-react";
+// import { CustomTooltip } from "@/components/common/CustomTooltip";
 
 interface DropdownOption {
   value: string;
@@ -8,7 +9,7 @@ interface DropdownOption {
   disabled?: boolean;
 }
 
-interface DropdownProps {
+export interface CustomDropdownProps {
   options: DropdownOption[];
   value?: string;
   onChange?: (value: string) => void;
@@ -17,45 +18,64 @@ interface DropdownProps {
   error?: string;
   disabled?: boolean;
   className?: string;
+  id?: string;
+
+  // Tooltip like your Button + Checkbox
+  tooltipMessage?: string;
+  tooltipPlacement?: "top" | "right" | "left" | "bottom";
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({
+export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   options,
   value,
   onChange,
-  placeholder = 'Select an option',
+  placeholder = "Select an option",
   label,
   error,
-  disabled,
+  disabled = false,
   className,
+  id,
+  tooltipMessage,
+  tooltipPlacement = "top",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const selectedOption = options.find(opt => opt.value === value);
+  const selectedOption = options.find((opt) => opt.value === value);
+  const dropdownId = React.useId();
 
+  // Close dropdown on outside click
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    const handleClickOutside = (ev: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(ev.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  return (
+  const dropdownContent = (
     <div className={cn("space-y-2", className)} ref={dropdownRef}>
       {label && (
-        <label className="block text-sm font-medium text-foreground">
+        <label
+          htmlFor={dropdownId}
+          className="block text-sm font-medium text-foreground"
+        >
           {label}
         </label>
       )}
+
       <div className="relative">
+        {/* Trigger */}
         <button
+          id={dropdownId}
           type="button"
-          onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
+          onClick={() => !disabled && setIsOpen(!isOpen)}
           className={cn(
             "w-full px-4 py-2.5 rounded-lg",
             "bg-background/50 backdrop-blur-sm",
@@ -69,31 +89,36 @@ export const Dropdown: React.FC<DropdownProps> = ({
           )}
         >
           <span>{selectedOption?.label || placeholder}</span>
-          <ChevronDown className={cn(
-            "w-4 h-4 transition-transform duration-200",
-            isOpen && "rotate-180"
-          )} />
+          <ChevronDown
+            className={cn(
+              "w-4 h-4 transition-transform duration-200",
+              isOpen && "rotate-180"
+            )}
+          />
         </button>
 
+        {/* Dropdown panel */}
         {isOpen && (
-          <div className={cn(
-            "absolute z-50 w-full mt-1 rounded-lg",
-            "bg-popover backdrop-blur-xl",
-            "border border-border/50",
-            "shadow-lg shadow-black/20",
-            "max-h-60 overflow-auto"
-          )}>
+          <div
+            className={cn(
+              "absolute z-50 w-full mt-1 rounded-lg",
+              "bg-popover backdrop-blur-xl",
+              "border border-border/50",
+              "shadow-lg shadow-black/20",
+              "max-h-60 overflow-auto animate-in fade-in-0 zoom-in-95"
+            )}
+          >
             {options.map((option) => (
               <button
                 key={option.value}
                 type="button"
+                disabled={option.disabled}
                 onClick={() => {
                   if (!option.disabled) {
                     onChange?.(option.value);
                     setIsOpen(false);
                   }
                 }}
-                disabled={option.disabled}
                 className={cn(
                   "w-full px-4 py-2.5 text-left",
                   "flex items-center justify-between",
@@ -112,9 +137,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
           </div>
         )}
       </div>
-      {error && (
-        <p className="text-sm text-destructive">{error}</p>
-      )}
+
+      {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );
+
+  return dropdownContent;
 };

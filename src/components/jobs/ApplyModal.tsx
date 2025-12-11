@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { X, Send } from 'lucide-react';
-import { Job, useJobs } from '@/contexts/JobsContext';
-import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
-import { toast } from '@/hooks/use-toast';
+import { useState } from "react";
+import { X, Send } from "lucide-react";
+import { Job, useJobs } from "@/contexts/JobsContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { CustomButton } from "@/components/custom/buttons/Button";
+import { toast } from "@/hooks/use-toast";
 
 interface ApplyModalProps {
   job: Job;
@@ -13,25 +13,25 @@ interface ApplyModalProps {
 const ApplyModal = ({ job, onClose }: ApplyModalProps) => {
   const { user } = useAuth();
   const { applyToJob, myApplications } = useJobs();
-  const [coverLetter, setCoverLetter] = useState('');
+  const [coverLetter, setCoverLetter] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const hasApplied = myApplications.some(app => app.jobId === job.id);
+  const hasApplied = myApplications.some((app) => app.jobId === job.id);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
 
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
     applyToJob(job.id, user.id, user.name, user.email, coverLetter);
-    
+
     toast({
       title: "Application Submitted!",
       description: `Your application for ${job.title} at ${job.company} has been sent.`,
     });
-    
+
     setIsSubmitting(false);
     onClose();
   };
@@ -39,11 +39,11 @@ const ApplyModal = ({ job, onClose }: ApplyModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-background/80 backdrop-blur-sm animate-fade-in"
         onClick={onClose}
       />
-      
+
       {/* Modal */}
       <div className="glass-card w-full max-w-lg p-6 relative animate-slide-up">
         <button
@@ -53,8 +53,12 @@ const ApplyModal = ({ job, onClose }: ApplyModalProps) => {
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="text-2xl font-display font-bold mb-2">Apply for Position</h2>
-        <p className="text-muted-foreground mb-6">{job.title} at {job.company}</p>
+        <h2 className="text-2xl font-display font-bold mb-2">
+          Apply for Position
+        </h2>
+        <p className="text-muted-foreground mb-6">
+          {job.title} at {job.company}
+        </p>
 
         {hasApplied ? (
           <div className="text-center py-8">
@@ -62,32 +66,38 @@ const ApplyModal = ({ job, onClose }: ApplyModalProps) => {
               <Send className="w-8 h-8 text-success" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Already Applied!</h3>
-            <p className="text-muted-foreground">You have already submitted an application for this position.</p>
+            <p className="text-muted-foreground">
+              You have already submitted an application for this position.
+            </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Your Name</label>
+              <label className="block text-sm font-medium mb-2">
+                Your Name
+              </label>
               <input
                 type="text"
-                value={user?.name || ''}
+                value={user?.name || ""}
                 disabled
                 className="glass-input opacity-60"
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-2">Email</label>
               <input
                 type="email"
-                value={user?.email || ''}
+                value={user?.email || ""}
                 disabled
                 className="glass-input opacity-60"
               />
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium mb-2">Cover Letter</label>
+              <label className="block text-sm font-medium mb-2">
+                Cover Letter
+              </label>
               <textarea
                 value={coverLetter}
                 onChange={(e) => setCoverLetter(e.target.value)}
@@ -99,20 +109,20 @@ const ApplyModal = ({ job, onClose }: ApplyModalProps) => {
             </div>
 
             <div className="flex gap-3 pt-4">
-              <Button
+              <CustomButton
                 type="button"
                 variant="outline"
                 onClick={onClose}
                 className="flex-1 glass-button"
               >
                 Cancel
-              </Button>
+              </CustomButton>
               <button
                 type="submit"
                 disabled={isSubmitting}
                 className="flex-1 gradient-button disabled:opacity-50"
               >
-                {isSubmitting ? 'Submitting...' : 'Submit Application'}
+                {isSubmitting ? "Submitting..." : "Submit Application"}
               </button>
             </div>
           </form>

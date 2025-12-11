@@ -1,9 +1,17 @@
-import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { Menu, X, User, LogOut, Briefcase, Building2, Users } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import ThemeToggle from '@/components/ui/ThemeToggle';
+import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  Menu,
+  X,
+  User,
+  LogOut,
+  Briefcase,
+  Building2,
+  Users,
+} from "lucide-react";
+import { CustomButton } from "@/components/custom/buttons/Button";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -13,41 +21,47 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
 
   const getRoleIcon = () => {
     switch (user?.role) {
-      case 'employer': return <Building2 className="w-4 h-4" />;
-      case 'recruiter': return <Users className="w-4 h-4" />;
-      case 'agency': return <Briefcase className="w-4 h-4" />;
-      default: return <User className="w-4 h-4" />;
+      case "employer":
+        return <Building2 className="w-4 h-4" />;
+      case "recruiter":
+        return <Users className="w-4 h-4" />;
+      case "agency":
+        return <Briefcase className="w-4 h-4" />;
+      default:
+        return <User className="w-4 h-4" />;
     }
   };
 
   const getDashboardLink = () => {
     switch (user?.role) {
-      case 'employer':
-      case 'recruiter':
-      case 'agency':
-        return '/employer/dashboard';
+      case "employer":
+      case "recruiter":
+      case "agency":
+        return "/employer/dashboard";
       default:
-        return '/seeker/dashboard';
+        return "/seeker/dashboard";
     }
   };
 
-  const navLinks = isAuthenticated ? (
-    user?.role === 'job_seeker' ? [
-      { to: '/seeker/dashboard', label: 'Dashboard' },
-      { to: '/seeker/jobs', label: 'Browse Jobs' },
-      { to: '/seeker/applications', label: 'My Applications' },
-      { to: '/seeker/saved', label: 'Saved Jobs' },
-    ] : [
-      { to: '/employer/dashboard', label: 'Dashboard' },
-      { to: '/employer/post-job', label: 'Post Job' },
-      { to: '/employer/my-jobs', label: 'My Jobs' },
-    ]
-  ) : [];
+  const navLinks = isAuthenticated
+    ? user?.role === "job_seeker"
+      ? [
+          { to: "/seeker/dashboard", label: "Dashboard" },
+          { to: "/seeker/jobs", label: "Browse Jobs" },
+          { to: "/seeker/applications", label: "My Applications" },
+          { to: "/seeker/saved", label: "Saved Jobs" },
+        ]
+      : [
+          { to: "/employer/dashboard", label: "Dashboard" },
+          { to: "/employer/post-job", label: "Post Job" },
+          { to: "/employer/my-jobs", label: "My Jobs" },
+        ]
+    : [];
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -60,19 +74,21 @@ const Navbar = () => {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
               <Briefcase className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-display font-bold gradient-text">HireGlass</span>
+            <span className="text-xl font-display font-bold gradient-text">
+              HireGlass
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-2">
-            {navLinks.map(link => (
+            {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                   isActive(link.to)
-                    ? 'bg-primary/20 text-primary'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
+                    ? "bg-primary/20 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/5"
                 }`}
               >
                 {link.label}
@@ -89,7 +105,7 @@ const Navbar = () => {
                   {getRoleIcon()}
                   <span className="text-sm font-medium">{user?.name}</span>
                 </div>
-                <Button
+                <CustomButton
                   variant="ghost"
                   size="sm"
                   onClick={handleLogout}
@@ -97,19 +113,23 @@ const Navbar = () => {
                 >
                   <LogOut className="w-4 h-4 mr-2" />
                   Logout
-                </Button>
+                </CustomButton>
               </>
             ) : (
               <>
                 <Link to="/login">
-                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                  <CustomButton
+                    variant="ghost"
+                    size="sm"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
                     Login
-                  </Button>
+                  </CustomButton>
                 </Link>
                 <Link to="/signup">
-                  <Button className="gradient-button text-sm">
+                  <CustomButton className="gradient-button text-sm">
                     Get Started
-                  </Button>
+                  </CustomButton>
                 </Link>
               </>
             )}
@@ -120,7 +140,11 @@ const Navbar = () => {
             className="md:hidden p-2 rounded-xl hover:bg-white/10 transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
 
@@ -128,15 +152,15 @@ const Navbar = () => {
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 pt-4 border-t border-white/10 animate-fade-in">
             <div className="flex flex-col gap-2">
-              {navLinks.map(link => (
+              {navLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                     isActive(link.to)
-                      ? 'bg-primary/20 text-primary'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
+                      ? "bg-primary/20 text-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/5"
                   }`}
                 >
                   {link.label}
@@ -149,7 +173,10 @@ const Navbar = () => {
               <div className="h-px bg-border my-2" />
               {isAuthenticated ? (
                 <button
-                  onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
+                  onClick={() => {
+                    handleLogout();
+                    setMobileMenuOpen(false);
+                  }}
                   className="px-4 py-3 rounded-xl text-sm font-medium text-left text-muted-foreground hover:text-foreground hover:bg-white/5 flex items-center gap-2"
                 >
                   <LogOut className="w-4 h-4" />
