@@ -7,6 +7,7 @@ import TestimonialsCarousel from '@/components/landing/TestimonialsCarousel';
 import CompaniesCarousel from '@/components/landing/CompaniesCarousel';
 import FAQSection from '@/components/landing/FAQSection';
 import Chatbot from '@/components/landing/Chatbot';
+import JobSearchHero from '@/components/landing/JobSearchHero';
 
 const features = [
   { icon: Search, title: 'Smart Job Matching', description: 'AI-powered system matches you with perfect opportunities based on your skills.' },
@@ -57,6 +58,9 @@ const Landing = () => {
               </Button>
             </Link>
           </div>
+
+          {/* Job Search Filters */}
+          <JobSearchHero />
 
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">

@@ -1,3 +1,4 @@
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useJobs } from '@/contexts/JobsContext';
@@ -5,10 +6,33 @@ import { Briefcase, Bookmark, FileText, TrendingUp, ArrowRight } from 'lucide-re
 import PageLayout from '@/components/layout/PageLayout';
 import GlassCard from '@/components/ui/GlassCard';
 import JobCard from '@/components/jobs/JobCard';
+import DashboardFilters from '@/components/jobs/DashboardFilters';
+
+const jobFilters = [
+  { value: 'all', label: 'All Jobs' },
+  { value: 'remote', label: 'Remote' },
+  { value: 'full-time', label: 'Full Time' },
+  { value: 'part-time', label: 'Part Time' },
+];
 
 const SeekerDashboard = () => {
   const { user } = useAuth();
   const { jobs, savedJobs, myApplications } = useJobs();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('all');
+
+  const filteredJobs = useMemo(() => {
+    return jobs.filter(job => {
+      const matchesSearch = searchQuery === '' || 
+        job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.skills?.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()));
+      
+      const matchesFilter = selectedFilter === 'all' || job.type === selectedFilter;
+      
+      return matchesSearch && matchesFilter;
+    }).slice(0, 5);
+  }, [jobs, searchQuery, selectedFilter]);
 
   const stats = [
     { label: 'Available Jobs', value: jobs.length, icon: Briefcase, color: 'text-primary' },
@@ -16,8 +40,6 @@ const SeekerDashboard = () => {
     { label: 'Applications', value: myApplications.length, icon: FileText, color: 'text-success' },
     { label: 'Profile Views', value: 142, icon: TrendingUp, color: 'text-secondary-foreground' },
   ];
-
-  const recentJobs = jobs.slice(0, 3);
 
   return (
     <PageLayout>
@@ -57,10 +79,28 @@ const SeekerDashboard = () => {
                 View All <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
+            
+            {/* Dashboard Filters */}
+            <DashboardFilters
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedFilter={selectedFilter}
+              setSelectedFilter={setSelectedFilter}
+              filters={jobFilters}
+              placeholder="Search jobs, companies, skills..."
+              className="mb-4"
+            />
+            
             <div className="space-y-4">
-              {recentJobs.map(job => (
-                <JobCard key={job.id} job={job} />
-              ))}
+              {filteredJobs.length > 0 ? (
+                filteredJobs.map(job => (
+                  <JobCard key={job.id} job={job} />
+                ))
+              ) : (
+                <GlassCard className="p-8 text-center">
+                  <p className="text-muted-foreground">No jobs match your filters.</p>
+                </GlassCard>
+              )}
             </div>
           </div>
 
