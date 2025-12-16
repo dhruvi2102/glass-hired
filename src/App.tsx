@@ -24,6 +24,7 @@ import SavedJobs from "./pages/seeker/SavedJobs";
 import EmployerDashboard from "./pages/employer/EmployerDashboard";
 import PostJob from "./pages/employer/PostJob";
 import MyJobs from "./pages/employer/MyJobs";
+import ComponentDemo from "./pages/ComponentDemo";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const AppRoutes = () => {
       <Route path="/contact" element={<Contact />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/privacy" element={<Privacy />} />
+      <Route path="/demo" element={<ComponentDemo />} />
 
       {/* Job Seeker Routes */}
       <Route path="/seeker/dashboard" element={
