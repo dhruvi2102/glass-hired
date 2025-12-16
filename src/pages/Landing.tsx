@@ -15,6 +15,7 @@ import TestimonialsCarousel from "@/components/landing/TestimonialsCarousel";
 import CompaniesCarousel from "@/components/landing/CompaniesCarousel";
 import FAQSection from "@/components/landing/FAQSection";
 import Chatbot from "@/components/landing/Chatbot";
+import JobSearchHero from "@/components/landing/JobSearchHero";
 
 const features = [
   {
@@ -98,6 +99,9 @@ const Landing = () => {
               </CustomButton>
             </Link>
           </div>
+
+          {/* Job Search Filters */}
+          <JobSearchHero />
 
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
