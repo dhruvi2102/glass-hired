@@ -12,6 +12,10 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import SeekerDashboard from "./pages/seeker/SeekerDashboard";
 import BrowseJobs from "./pages/seeker/BrowseJobs";
 import JobDetails from "./pages/seeker/JobDetails";
@@ -46,6 +50,10 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/terms" element={<Terms />} />
+      <Route path="/privacy" element={<Privacy />} />
 
       {/* Job Seeker Routes */}
       <Route path="/seeker/dashboard" element={
