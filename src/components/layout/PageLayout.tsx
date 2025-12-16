@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import Navbar from './Navbar';
+import Footer from './Footer';
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -8,7 +9,7 @@ interface PageLayoutProps {
 
 const PageLayout = ({ children, showOrbs = true }: PageLayoutProps) => {
   return (
-    <div className="min-h-screen bg-gradient-cosmic relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-cosmic relative overflow-hidden flex flex-col">
       {/* Decorative Orbs */}
       {showOrbs && (
         <>
@@ -20,9 +21,11 @@ const PageLayout = ({ children, showOrbs = true }: PageLayoutProps) => {
       
       <Navbar />
       
-      <main className="relative z-10 pt-28 pb-12">
+      <main className="relative z-10 pt-28 pb-12 flex-1">
         {children}
       </main>
+
+      <Footer />
     </div>
   );
 };
