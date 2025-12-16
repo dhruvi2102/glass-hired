@@ -1,7 +1,7 @@
 // Form Components
 export { TextField } from "./TextField";
 export { RadioButton } from "./RadioButton";
-export { Dropdown } from "./Dropdown";
+export { CustomDropdown as Dropdown } from "./Dropdown";
 export { CustomCheckbox } from "./Checkbox";
 export { EntryForm } from "./EntryForm";
 
@@ -22,7 +22,7 @@ export {
   CancelButton,
   ResetButton,
   ButtonGroup,
-} from "./buttons";
+} from "./buttons/index";
 
 // Menu Components
 export { MenuItem } from "./menu/MenuItem";
