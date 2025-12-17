@@ -45,12 +45,20 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MultiSelectTypeAhead } from "@/components/custom/MultiSelectTypeAhead";
 import { RadioButton } from "@/components/custom/RadioButton";
 import { CustomCheckbox } from "@/components/custom/Checkbox";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Settings,
   Users,
@@ -64,6 +72,7 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -107,6 +116,7 @@ type SortKey = "name" | "email" | "role" | "status";
 type SortDirection = "asc" | "desc" | null;
 
 const ComponentDemo = () => {
+  const isMobile = useIsMobile();
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
   const [notificationPreference, setNotificationPreference] = useState("email");
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -182,8 +192,8 @@ const ComponentDemo = () => {
   return (
     <div className="min-h-screen bg-gradient-cosmic relative overflow-hidden flex flex-col">
       {/* Decorative Orbs */}
-      <div className="orb orb-primary w-[600px] h-[600px] -top-[200px] -left-[200px] animate-pulse-glow" />
-      <div className="orb orb-secondary w-[500px] h-[500px] top-[40%] -right-[150px] animate-pulse-glow animation-delay-200" />
+      <div className="orb orb-primary w-[300px] h-[300px] md:w-[600px] md:h-[600px] -top-[100px] -left-[100px] md:-top-[200px] md:-left-[200px] animate-pulse-glow" />
+      <div className="orb orb-secondary w-[250px] h-[250px] md:w-[500px] md:h-[500px] top-[40%] -right-[75px] md:-right-[150px] animate-pulse-glow animation-delay-200" />
       
       <Navbar />
       
@@ -239,19 +249,19 @@ const ComponentDemo = () => {
           </Sidebar>
 
           {/* Main Content */}
-          <main className="flex-1 p-6 space-y-8">
+          <main className="flex-1 p-4 md:p-6 space-y-6 md:space-y-8 overflow-x-hidden">
             {/* Header with Navigation Menu */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-center gap-3">
                 <SidebarTrigger className="p-2 hover:bg-muted/50 rounded-lg" />
-                <h1 className="text-2xl font-bold text-foreground">Component Demo</h1>
+                <h1 className="text-xl md:text-2xl font-bold text-foreground">Component Demo</h1>
               </div>
 
               {/* Navigation Menu */}
-              <NavigationMenu>
-                <NavigationMenuList>
+              <NavigationMenu className="hidden sm:flex">
+                <NavigationMenuList className="gap-1">
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-background/50 backdrop-blur-sm">
+                    <NavigationMenuTrigger className="bg-background/50 backdrop-blur-sm text-xs sm:text-sm px-2 sm:px-4">
                       Quick Actions
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
@@ -293,7 +303,7 @@ const ComponentDemo = () => {
                     </NavigationMenuContent>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-background/50 backdrop-blur-sm">
+                    <NavigationMenuTrigger className="bg-background/50 backdrop-blur-sm text-xs sm:text-sm px-2 sm:px-4">
                       Help
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
@@ -329,120 +339,218 @@ const ComponentDemo = () => {
 
             {/* Data Table with Checkboxes, Sorting, and Pagination */}
             <section className="space-y-4">
-              <h2 className="text-xl font-semibold text-foreground">User Management</h2>
-              <p className="text-sm text-muted-foreground">
-                Showing {paginatedUsers.length} of {sortedUsers.length} users (Page {currentPage} of {totalPages})
-              </p>
-              <div className="rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/30">
-                      <TableHead className="w-12">
-                        <Checkbox
-                          checked={paginatedUsers.length > 0 && paginatedUsers.every(u => selectedUsers.includes(u.id))}
-                          onCheckedChange={handleSelectAll}
-                        />
-                      </TableHead>
-                      <TableHead>
-                        <button
-                          onClick={() => handleSort("name")}
-                          className="flex items-center hover:text-primary transition-colors"
-                        >
-                          Name {getSortIcon("name")}
-                        </button>
-                      </TableHead>
-                      <TableHead>
-                        <button
-                          onClick={() => handleSort("email")}
-                          className="flex items-center hover:text-primary transition-colors"
-                        >
-                          Email {getSortIcon("email")}
-                        </button>
-                      </TableHead>
-                      <TableHead>
-                        <button
-                          onClick={() => handleSort("role")}
-                          className="flex items-center hover:text-primary transition-colors"
-                        >
-                          Role {getSortIcon("role")}
-                        </button>
-                      </TableHead>
-                      <TableHead>
-                        <button
-                          onClick={() => handleSort("status")}
-                          className="flex items-center hover:text-primary transition-colors"
-                        >
-                          Status {getSortIcon("status")}
-                        </button>
-                      </TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {paginatedUsers.map((user) => (
-                      <TableRow key={user.id} className="hover:bg-muted/20">
-                        <TableCell>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <h2 className="text-xl font-semibold text-foreground">User Management</h2>
+                <p className="text-sm text-muted-foreground">
+                  Showing {paginatedUsers.length} of {sortedUsers.length} users (Page {currentPage} of {totalPages})
+                </p>
+              </div>
+              
+              {/* Mobile Sort Controls */}
+              {isMobile && (
+                <div className="flex gap-2">
+                  <Select value={sortKey || ""} onValueChange={(value) => handleSort(value as SortKey)}>
+                    <SelectTrigger className="flex-1 bg-background/50">
+                      <SelectValue placeholder="Sort by..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="name">Name</SelectItem>
+                      <SelectItem value="email">Email</SelectItem>
+                      <SelectItem value="role">Role</SelectItem>
+                      <SelectItem value="status">Status</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {sortKey && (
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => setSortDirection(d => d === "asc" ? "desc" : "asc")}
+                      className="bg-background/50"
+                    >
+                      {sortDirection === "asc" ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
+                    </Button>
+                  )}
+                </div>
+              )}
+
+              {/* Desktop Table View */}
+              {!isMobile && (
+                <div className="rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-muted/30">
+                        <TableHead className="w-12">
+                          <Checkbox
+                            checked={paginatedUsers.length > 0 && paginatedUsers.every(u => selectedUsers.includes(u.id))}
+                            onCheckedChange={handleSelectAll}
+                          />
+                        </TableHead>
+                        <TableHead>
+                          <button
+                            onClick={() => handleSort("name")}
+                            className="flex items-center hover:text-primary transition-colors"
+                          >
+                            Name {getSortIcon("name")}
+                          </button>
+                        </TableHead>
+                        <TableHead>
+                          <button
+                            onClick={() => handleSort("email")}
+                            className="flex items-center hover:text-primary transition-colors"
+                          >
+                            Email {getSortIcon("email")}
+                          </button>
+                        </TableHead>
+                        <TableHead>
+                          <button
+                            onClick={() => handleSort("role")}
+                            className="flex items-center hover:text-primary transition-colors"
+                          >
+                            Role {getSortIcon("role")}
+                          </button>
+                        </TableHead>
+                        <TableHead>
+                          <button
+                            onClick={() => handleSort("status")}
+                            className="flex items-center hover:text-primary transition-colors"
+                          >
+                            Status {getSortIcon("status")}
+                          </button>
+                        </TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {paginatedUsers.map((user) => (
+                        <TableRow key={user.id} className="hover:bg-muted/20">
+                          <TableCell>
+                            <Checkbox
+                              checked={selectedUsers.includes(user.id)}
+                              onCheckedChange={(checked) =>
+                                handleSelectUser(user.id, checked as boolean)
+                              }
+                            />
+                          </TableCell>
+                          <TableCell className="font-medium">{user.name}</TableCell>
+                          <TableCell>{user.email}</TableCell>
+                          <TableCell>
+                            <span
+                              className={cn(
+                                "px-2 py-1 rounded-full text-xs font-medium",
+                                user.role === "Admin"
+                                  ? "bg-primary/20 text-primary"
+                                  : user.role === "Editor"
+                                  ? "bg-blue-500/20 text-blue-400"
+                                  : "bg-muted text-muted-foreground"
+                              )}
+                            >
+                              {user.role}
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            <span
+                              className={cn(
+                                "px-2 py-1 rounded-full text-xs font-medium",
+                                user.status === "Active"
+                                  ? "bg-green-500/20 text-green-400"
+                                  : user.status === "Inactive"
+                                  ? "bg-red-500/20 text-red-400"
+                                  : "bg-yellow-500/20 text-yellow-400"
+                              )}
+                            >
+                              {user.status}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button variant="ghost" size="sm">
+                                    Edit
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Edit user details</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+
+              {/* Mobile Card View */}
+              {isMobile && (
+                <div className="space-y-3">
+                  {/* Select All */}
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30">
+                    <Checkbox
+                      checked={paginatedUsers.length > 0 && paginatedUsers.every(u => selectedUsers.includes(u.id))}
+                      onCheckedChange={handleSelectAll}
+                    />
+                    <span className="text-sm text-muted-foreground">Select all on this page</span>
+                  </div>
+                  
+                  {paginatedUsers.map((user) => (
+                    <div
+                      key={user.id}
+                      className="p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm space-y-3"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3">
                           <Checkbox
                             checked={selectedUsers.includes(user.id)}
                             onCheckedChange={(checked) =>
                               handleSelectUser(user.id, checked as boolean)
                             }
                           />
-                        </TableCell>
-                        <TableCell className="font-medium">{user.name}</TableCell>
-                        <TableCell>{user.email}</TableCell>
-                        <TableCell>
-                          <span
-                            className={cn(
-                              "px-2 py-1 rounded-full text-xs font-medium",
-                              user.role === "Admin"
-                                ? "bg-primary/20 text-primary"
-                                : user.role === "Editor"
-                                ? "bg-blue-500/20 text-blue-400"
-                                : "bg-muted text-muted-foreground"
-                            )}
-                          >
-                            {user.role}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <span
-                            className={cn(
-                              "px-2 py-1 rounded-full text-xs font-medium",
-                              user.status === "Active"
-                                ? "bg-green-500/20 text-green-400"
-                                : user.status === "Inactive"
-                                ? "bg-red-500/20 text-red-400"
-                                : "bg-yellow-500/20 text-yellow-400"
-                            )}
-                          >
-                            {user.status}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  Edit
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Edit user details</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                          <div>
+                            <p className="font-medium text-foreground">{user.name}</p>
+                            <p className="text-sm text-muted-foreground break-all">{user.email}</p>
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="sm">
+                          Edit
+                        </Button>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <span
+                          className={cn(
+                            "px-2 py-1 rounded-full text-xs font-medium",
+                            user.role === "Admin"
+                              ? "bg-primary/20 text-primary"
+                              : user.role === "Editor"
+                              ? "bg-blue-500/20 text-blue-400"
+                              : "bg-muted text-muted-foreground"
+                          )}
+                        >
+                          {user.role}
+                        </span>
+                        <span
+                          className={cn(
+                            "px-2 py-1 rounded-full text-xs font-medium",
+                            user.status === "Active"
+                              ? "bg-green-500/20 text-green-400"
+                              : user.status === "Inactive"
+                              ? "bg-red-500/20 text-red-400"
+                              : "bg-yellow-500/20 text-yellow-400"
+                          )}
+                        >
+                          {user.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
               
               {/* Pagination */}
               {totalPages > 1 && (
                 <Pagination>
-                  <PaginationContent>
+                  <PaginationContent className="flex-wrap justify-center gap-1">
                     <PaginationItem>
                       <PaginationPrevious
                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
@@ -484,10 +592,10 @@ const ComponentDemo = () => {
             </section>
 
             {/* Form Section with Radio Groups and Multi-Select */}
-            <section className="grid md:grid-cols-2 gap-6">
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {/* Settings Form */}
-              <div className="space-y-6 p-6 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm">
-                <h2 className="text-xl font-semibold text-foreground">User Settings</h2>
+              <div className="space-y-4 md:space-y-6 p-4 md:p-6 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm">
+                <h2 className="text-lg md:text-xl font-semibold text-foreground">User Settings</h2>
 
                 {/* Notification Preferences with shadcn Radio Group */}
                 <div className="space-y-3">
@@ -557,8 +665,8 @@ const ComponentDemo = () => {
               </div>
 
               {/* Add User Form */}
-              <div className="space-y-6 p-6 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm">
-                <h2 className="text-xl font-semibold text-foreground">Add New User</h2>
+              <div className="space-y-4 md:space-y-6 p-4 md:p-6 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm">
+                <h2 className="text-lg md:text-xl font-semibold text-foreground">Add New User</h2>
 
                 <div className="space-y-4">
                   <div className="space-y-2">
