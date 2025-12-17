@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import {
@@ -37,6 +37,14 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,16 +61,26 @@ import {
   Shield,
   HelpCircle,
   Info,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Sample data for the table
+// Extended sample data for pagination demo
 const sampleUsers = [
   { id: 1, name: "John Doe", email: "john@example.com", role: "Admin", status: "Active" },
   { id: 2, name: "Jane Smith", email: "jane@example.com", role: "Editor", status: "Active" },
   { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Viewer", status: "Inactive" },
   { id: 4, name: "Alice Brown", email: "alice@example.com", role: "Editor", status: "Active" },
   { id: 5, name: "Charlie Wilson", email: "charlie@example.com", role: "Viewer", status: "Pending" },
+  { id: 6, name: "Diana Ross", email: "diana@example.com", role: "Admin", status: "Active" },
+  { id: 7, name: "Edward King", email: "edward@example.com", role: "Editor", status: "Inactive" },
+  { id: 8, name: "Fiona Green", email: "fiona@example.com", role: "Viewer", status: "Active" },
+  { id: 9, name: "George Miller", email: "george@example.com", role: "Editor", status: "Pending" },
+  { id: 10, name: "Hannah White", email: "hannah@example.com", role: "Admin", status: "Active" },
+  { id: 11, name: "Ian Black", email: "ian@example.com", role: "Viewer", status: "Inactive" },
+  { id: 12, name: "Julia Adams", email: "julia@example.com", role: "Editor", status: "Active" },
 ];
 
 const skillOptions = [
@@ -85,6 +103,9 @@ const sidebarItems = [
   { title: "Security", icon: Shield, url: "#security" },
 ];
 
+type SortKey = "name" | "email" | "role" | "status";
+type SortDirection = "asc" | "desc" | null;
+
 const ComponentDemo = () => {
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
   const [notificationPreference, setNotificationPreference] = useState("email");
@@ -93,10 +114,58 @@ const ComponentDemo = () => {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
+  
+  // Sorting state
+  const [sortKey, setSortKey] = useState<SortKey | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+
+  // Sort and paginate data
+  const sortedUsers = useMemo(() => {
+    let result = [...sampleUsers];
+    if (sortKey && sortDirection) {
+      result.sort((a, b) => {
+        const aVal = a[sortKey].toLowerCase();
+        const bVal = b[sortKey].toLowerCase();
+        const comparison = aVal.localeCompare(bVal);
+        return sortDirection === "desc" ? -comparison : comparison;
+      });
+    }
+    return result;
+  }, [sortKey, sortDirection]);
+
+  const totalPages = Math.ceil(sortedUsers.length / pageSize);
+  const paginatedUsers = sortedUsers.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      if (sortDirection === "asc") setSortDirection("desc");
+      else if (sortDirection === "desc") {
+        setSortKey(null);
+        setSortDirection(null);
+      }
+    } else {
+      setSortKey(key);
+      setSortDirection("asc");
+    }
+    setCurrentPage(1);
+  };
+
+  const getSortIcon = (key: SortKey) => {
+    if (sortKey !== key) return <ArrowUpDown className="h-4 w-4 ml-1" />;
+    if (sortDirection === "asc") return <ArrowUp className="h-4 w-4 ml-1" />;
+    return <ArrowDown className="h-4 w-4 ml-1" />;
+  };
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedUsers(sampleUsers.map((u) => u.id));
+      setSelectedUsers(paginatedUsers.map((u) => u.id));
     } else {
       setSelectedUsers([]);
     }
@@ -258,28 +327,59 @@ const ComponentDemo = () => {
               </NavigationMenu>
             </div>
 
-            {/* Data Table with Checkboxes */}
+            {/* Data Table with Checkboxes, Sorting, and Pagination */}
             <section className="space-y-4">
               <h2 className="text-xl font-semibold text-foreground">User Management</h2>
+              <p className="text-sm text-muted-foreground">
+                Showing {paginatedUsers.length} of {sortedUsers.length} users (Page {currentPage} of {totalPages})
+              </p>
               <div className="rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm overflow-hidden">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-muted/30">
                       <TableHead className="w-12">
                         <Checkbox
-                          checked={selectedUsers.length === sampleUsers.length}
+                          checked={paginatedUsers.length > 0 && paginatedUsers.every(u => selectedUsers.includes(u.id))}
                           onCheckedChange={handleSelectAll}
                         />
                       </TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Status</TableHead>
+                      <TableHead>
+                        <button
+                          onClick={() => handleSort("name")}
+                          className="flex items-center hover:text-primary transition-colors"
+                        >
+                          Name {getSortIcon("name")}
+                        </button>
+                      </TableHead>
+                      <TableHead>
+                        <button
+                          onClick={() => handleSort("email")}
+                          className="flex items-center hover:text-primary transition-colors"
+                        >
+                          Email {getSortIcon("email")}
+                        </button>
+                      </TableHead>
+                      <TableHead>
+                        <button
+                          onClick={() => handleSort("role")}
+                          className="flex items-center hover:text-primary transition-colors"
+                        >
+                          Role {getSortIcon("role")}
+                        </button>
+                      </TableHead>
+                      <TableHead>
+                        <button
+                          onClick={() => handleSort("status")}
+                          className="flex items-center hover:text-primary transition-colors"
+                        >
+                          Status {getSortIcon("status")}
+                        </button>
+                      </TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {sampleUsers.map((user) => (
+                    {paginatedUsers.map((user) => (
                       <TableRow key={user.id} className="hover:bg-muted/20">
                         <TableCell>
                           <Checkbox
@@ -338,6 +438,44 @@ const ComponentDemo = () => {
                   </TableBody>
                 </Table>
               </div>
+              
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        className={cn(
+                          "cursor-pointer",
+                          currentPage === 1 && "pointer-events-none opacity-50"
+                        )}
+                      />
+                    </PaginationItem>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          onClick={() => setCurrentPage(page)}
+                          isActive={currentPage === page}
+                          className="cursor-pointer"
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        className={cn(
+                          "cursor-pointer",
+                          currentPage === totalPages && "pointer-events-none opacity-50"
+                        )}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              )}
+              
               {selectedUsers.length > 0 && (
                 <p className="text-sm text-muted-foreground">
                   {selectedUsers.length} user(s) selected
